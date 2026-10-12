@@ -1,1 +1,1670 @@
+<!DOCTYPE html>
 
+<html dir="rtl" lang="fa">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>تقویم و مدیریت کارهای تیم</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Calibri,Arial,sans-serif;background:linear-gradient(135deg,#eef2ff 0%,#f8fafc 45%,#ecfeff 100%);color:#172033;min-height:100vh}
+header{background:linear-gradient(135deg,#111827,#1e3a8a 55%,#0f766e);color:#fff;padding:22px 28px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 10px 30px #0f172a22;position:sticky;top:0;z-index:20;overflow:hidden}
+header:after{content:"";position:absolute;width:280px;height:280px;border-radius:50%;background:#ffffff12;left:-70px;top:-150px}
+header h1{margin:0;font-size:23px;position:relative;z-index:1}.wrap{max-width:1250px;margin:28px auto;padding:0 16px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:22px}.card{background:#ffffffdd;backdrop-filter:blur(12px);border:1px solid #ffffffaa;border-radius:18px;padding:20px;box-shadow:0 12px 30px #0f172a12}.stat{position:relative;overflow:hidden}.stat:after{content:"";position:absolute;width:90px;height:90px;border-radius:50%;background:#2563eb12;left:-22px;bottom:-30px}.stat b{font-size:30px;display:block;margin-top:8px;position:relative;z-index:1}
+.tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;position:sticky;top:84px;z-index:15;padding:10px 12px;background:#ffffffaa;backdrop-filter:blur(16px);border:1px solid #ffffffcc;border-radius:18px;box-shadow:0 10px 28px #0f172a12}.tab{border:0;padding:12px 18px;border-radius:12px;background:transparent;cursor:pointer;font-weight:bold;color:#475569;transition:.2s;box-shadow:none}.tab:hover{transform:translateY(-2px);background:#ffffffbb}.tab.active{background:linear-gradient(135deg,#2563eb,#4f46e5);color:#fff;box-shadow:0 8px 18px #2563eb44}
+.panel{display:none}.panel.active{display:block}.toolbar{display:flex;gap:10px;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap}.toolbar h2{font-size:20px}
+button,.btn{border:0;border-radius:9px;padding:10px 14px;cursor:pointer;font-weight:bold}.primary{background:#2563eb;color:#fff}.secondary{background:#e5e7eb}.danger{background:#fee2e2;color:#991b1b}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden}th,td{padding:12px;border-bottom:1px solid #eef0f4;text-align:right}th{background:#f8fafc}
+.badge{padding:5px 9px;border-radius:20px;font-size:12px;font-weight:bold}.todo{background:#fee2e2;color:#991b1b}.doing{background:#fef3c7;color:#92400e}.done{background:#dcfce7;color:#166534}.cancel{background:#e5e7eb;color:#374151}.task-check-btn{width:38px;height:38px;min-width:38px;padding:0!important;border-radius:11px!important;display:inline-flex!important;align-items:center;justify-content:center;font-size:18px!important;font-weight:700;line-height:1;cursor:pointer;transition:.2s;border:1px solid #cbd5e1;background:#fff;color:#64748b}.task-check-btn:hover{transform:translateY(-1px) scale(1.04);background:#ecfdf5;color:#059669;border-color:#86efac;box-shadow:0 6px 14px #10b98122}.task-check-btn.completed{background:#dcfce7;color:#15803d;border-color:#86efac;cursor:default}.task-check-btn.completed:hover{transform:none;box-shadow:none}
+.modal{position:fixed;inset:0;background:#0008;backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px);display:none;align-items:center;justify-content:center;padding:15px;z-index:1000}.modal.show{display:flex}.modalbox{background:linear-gradient(180deg,#ffffff,#f8fafc);border:1px solid #ffffffaa;border-radius:22px;width:min(680px,100%);max-height:92vh;overflow:auto;padding:24px;box-shadow:0 25px 80px #0f172a44}
+.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}label{font-weight:bold;font-size:13px}input,select,textarea{width:100%;margin-top:6px;padding:11px;border:1px solid #d1d5db;border-radius:9px;font-family:inherit}textarea{min-height:90px}.full{grid-column:1/-1}.actions{display:flex;gap:8px;justify-content:flex-start;margin-top:18px}
+.calendar-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}.day-name{background:#e5e7eb;padding:10px;text-align:center;font-weight:bold}.day{background:#ffffffdd;min-height:120px;border-radius:14px;padding:9px;box-shadow:0 5px 14px #0000000a;border:1px solid #ffffff;transition:.2s}.day:hover{transform:translateY(-2px);box-shadow:0 10px 22px #00000012}.day.today{outline:2px solid #2563eb}.daynum{font-weight:bold}.event{font-size:11px;margin-top:6px;padding:5px;border-radius:6px;background:#dbeafe;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.event.done{background:#dcfce7}.event.overdue{background:#fee2e2}
+.empty{text-align:center;padding:35px;color:#6b7280}
+
+.date-picker-btn{width:100%;margin-top:6px;padding:11px 13px;border:1px solid #d1d5db;border-radius:9px;background:#fff;text-align:right;font-family:inherit;cursor:pointer;color:#334155}
+.date-picker-btn:hover{border-color:#2563eb;box-shadow:0 0 0 3px #2563eb18}
+.picker-box{position:relative;z-index:1001;width:min(430px,100%);background:linear-gradient(180deg,#fff,#f8fafc);border-radius:22px;padding:20px;box-shadow:0 25px 80px #0f172a44}
+.picker-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.picker-head button{background:#eef2ff;color:#3730a3}
+.picker-title{font-weight:bold;font-size:18px}.picker-week,.picker-days{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}.picker-week div{text-align:center;font-size:11px;color:#64748b;padding:6px 0;font-weight:bold}
+.picker-day{border:0;background:#fff;border-radius:9px;padding:10px 4px;cursor:pointer;font-family:inherit}.picker-day:hover{background:#dbeafe;color:#1d4ed8}.picker-day.selected{background:#2563eb;color:#fff}.picker-day.today{outline:2px solid #14b8a6;outline-offset:-2px}.picker-empty{height:38px}
+
+@media(max-width:800px){header{padding:16px 18px}.tabs{top:70px}.grid{grid-template-columns:repeat(2,1fr)}.formgrid{grid-template-columns:1fr}.calendar{gap:3px}.day{min-height:90px;padding:5px}.event{font-size:9px}}
+
+body{background:linear-gradient(135deg,#eef6ff,#f7f8ff,#eefdf7);background-size:300% 300%;animation:bgmove 18s ease infinite}
+@keyframes bgmove{0%{background-position:0 50%}50%{background-position:100% 50%}100%{background-position:0 50%}}
+.card,.panel,.stat,.modal-content{backdrop-filter:blur(14px);box-shadow:0 15px 40px rgba(0,0,0,.12);transition:.3s ease}
+.card:hover,.panel:hover,.stat:hover{transform:translateY(-4px) scale(1.01)}
+button{transition:.25s ease;position:relative;overflow:hidden}
+button:hover{transform:translateY(-2px);box-shadow:0 10px 25px rgba(0,0,0,.18)}
+input,select,textarea{transition:.25s ease}
+input:focus,select:focus,textarea:focus{transform:scale(1.01);box-shadow:0 0 0 3px rgba(59,130,246,.18)}
+.modal-content{animation:pop .25s ease}
+@keyframes pop{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
+body>*{animation:fade .5s ease}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+::-webkit-scrollbar{width:10px}::-webkit-scrollbar-thumb{background:#8aa6ff;border-radius:8px}
+</style>
+<style id="v162">
+.blob{position:fixed;width:320px;height:320px;border-radius:50%;filter:blur(70px);opacity:.18;pointer-events:none;animation:floatBlob 18s ease-in-out infinite;z-index:-1}
+.blob.b1{background:#4f46e5;top:-80px;right:-80px}
+.blob.b2{background:#06b6d4;bottom:-100px;left:-100px;animation-delay:-8s}
+@keyframes floatBlob{50%{transform:translate(40px,-20px) scale(1.15)}}
+.toast{position:fixed;left:20px;bottom:20px;background:#111827;color:#fff;padding:12px 18px;border-radius:12px;opacity:0;transform:translateY(20px);transition:.35s;z-index:3000}
+.toast.show{opacity:1;transform:translateY(0)}
+.ripple{position:absolute;border-radius:50%;transform:scale(0);animation:ripple .6s linear;background:rgba(255,255,255,.45);pointer-events:none}
+@keyframes ripple{to{transform:scale(4);opacity:0}}
+.card{transition:transform .25s}
+</style>
+<style id="v163spacing">
+.card,.panel,.widget,.calendar,.calendar-container,.modal-content,table{
+ border-radius:20px!important;
+}
+.card,.panel,.widget,.calendar-container,.modal-content{
+ padding:24px!important;
+ box-sizing:border-box;
+}
+table th,table td{padding:14px 16px!important;vertical-align:middle}
+input,select,textarea{padding:12px 14px!important;border-radius:14px!important}
+label{display:block;margin-bottom:8px}
+.form-group,.field,.row{margin-bottom:16px}
+button{border-radius:14px!important}
+.calendar td,.calendar th{padding:10px!important}
+.calendar td:hover{transform:scale(1.04);transition:.2s}
+</style>
+
+<style id="v165notif">
+.toast.success{background:#16a34a}.toast.warning{background:#d97706}.toast.error{background:#dc2626}
+.toast.info{background:#2563eb}
+</style>
+<style id="v166">
+.fade-switch{animation:pageFade .35s ease}
+@keyframes pageFade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.toast{min-width:260px;font-weight:600;border-left:5px solid rgba(255,255,255,.6)}
+button:hover{filter:brightness(1.04)}
+.card:hover,.panel:hover,.widget:hover{box-shadow:0 24px 60px rgba(0,0,0,.18)}
+</style>
+<style id="v167">
+:root{
+--shadow:0 18px 45px rgba(0,0,0,.15);
+}
+.stat,.card,.panel{
+ position:relative;
+ overflow:hidden;
+}
+.stat::before,.card::before{
+ content:"";
+ position:absolute;
+ inset:0;
+ background:linear-gradient(135deg,rgba(255,255,255,.08),transparent);
+ opacity:0;
+ transition:.3s;
+ pointer-events:none;
+}
+.stat:hover::before,.card:hover::before{opacity:1}
+.stat:hover,.card:hover,.panel:hover{
+ box-shadow:var(--shadow);
+}
+.badge-live{
+ display:inline-block;
+ padding:4px 10px;
+ border-radius:999px;
+ animation:pulse 2s infinite;
+}
+@keyframes pulse{
+0%,100%{transform:scale(1)}
+50%{transform:scale(1.08)}
+}
+</style>
+<style id="v168">
+.modal-content{animation:springIn .35s cubic-bezier(.2,1.2,.3,1)!important}
+@keyframes springIn{0%{opacity:0;transform:scale(.85) translateY(20px)}70%{transform:scale(1.02)}100%{opacity:1;transform:scale(1)}}
+.modal-backdrop,.overlay{backdrop-filter:blur(8px)!important}
+button.loading{pointer-events:none;opacity:.8}
+button.loading::after{
+content:'';display:inline-block;width:14px;height:14px;margin-inline-start:8px;
+border:2px solid currentColor;border-right-color:transparent;border-radius:50%;
+animation:spin .8s linear infinite;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
+.calendar td{transition:all .18s ease;border-radius:14px}
+.calendar td:hover{transform:translateY(-2px) scale(1.05);box-shadow:0 8px 20px rgba(0,0,0,.12)}
+</style>
+<style>button:active{transform:scale(.96)!important}tr:hover td{background:#f3f8ff}header{background:linear-gradient(90deg,#4f46e5,#06b6d4,#4f46e5)}</style>
+<style id="v17">
+button{transition:transform .15s,box-shadow .2s}button:active{transform:scale(.96)}
+tr{transition:background .2s,transform .2s}tbody tr:hover{background:rgba(0,123,255,.06);transform:translateX(-2px)}
+[data-tooltip]{position:relative}
+[data-tooltip]:hover:after{content:attr(data-tooltip);position:absolute;bottom:110%;right:0;background:#222;color:#fff;padding:6px 10px;border-radius:8px;font-size:12px;white-space:nowrap}
+header{background:linear-gradient(90deg,#2563eb,#4f46e5,#06b6d4)}
+</style>
+<style>.tooltip{position:fixed;background:#222;color:#fff;padding:6px 10px;border-radius:8px;font:12px Calibri;pointer-events:none;opacity:0;transition:.2s;z-index:99999}button:active{transform:scale(.97)}</style><style>.tooltip{position:fixed;background:#222;color:#fff;padding:6px 10px;border-radius:8px;font:12px Calibri;pointer-events:none;opacity:0;transition:.15s}.tooltip.show{opacity:1}button:active{transform:scale(.97)}</style>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@200;400;700&amp;family=Vazirmatn:wght@200;300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<script>window.tailwind = { config: { corePlugins: { preflight: false } } };</script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+<script src="https://unpkg.com/@phosphor-icons/web"></script>
+<style id="integrated-screensaver-style">
+    * {
+      user-select: none;
+      -webkit-user-select: none;
+      box-sizing: border-box;
+    }
+    
+    .ss-overlay { background-color:#050811; overflow:hidden; font-family:'Vazirmatn',sans-serif; }
+
+    /* Windows 10 Acrylic Blur & Fluent Glass */
+    .win-acrylic {
+      background: rgba(15, 23, 42, 0.55);
+      backdrop-filter: blur(28px) saturate(160%);
+      -webkit-backdrop-filter: blur(28px) saturate(160%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    }
+
+    .win-acrylic-subtle {
+      background: rgba(255, 255, 255, 0.035);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .win-acrylic-subtle:hover {
+      background: rgba(255, 255, 255, 0.07);
+      border-color: rgba(96, 205, 255, 0.4);
+    }
+
+    /* Glowing animations */
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.4; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(1.08); }
+    }
+
+    .ambient-glow-1 {
+      animation: pulseGlow 14s infinite ease-in-out alternate;
+    }
+
+    .ambient-glow-2 {
+      animation: pulseGlow 18s infinite ease-in-out alternate -5s;
+    }
+
+    /* Fade transition for screensaver auto-hide controls */
+    .hud-control {
+      transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .hud-hidden {
+      opacity: 0 !important;
+      pointer-events: none !important;
+      transform: translateY(20px);
+    }
+
+    /* Subtle Scanlines effect */
+    .scanlines::after {
+      content: " ";
+      position: absolute;
+      top: 0; left: 0; bottom: 0; right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+      background-size: 100% 4px;
+      z-index: 2;
+      pointer-events: none;
+      opacity: 0.2;
+    }
+
+    /* Custom Scrollbar for list preview */
+    ::-webkit-scrollbar {
+      width: 5px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 9999px;
+    }
+  </style><style id="integrated-screensaver-behavior">
+#screensaverOverlay{position:fixed;inset:0;z-index:100000;display:flex;width:100vw;height:100vh;visibility:hidden;opacity:0;pointer-events:none;transform:scale(1.035);transition:opacity .65s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1),visibility 0s linear .8s;}
+#screensaverOverlay.ss-active{visibility:visible;opacity:1;pointer-events:auto;transform:scale(1);transition:opacity .65s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1),visibility 0s linear 0s;}
+#screensaverOverlay *{box-sizing:border-box;}
+body.screensaver-running{overflow:hidden!important;}
+body.screensaver-running > *:not(#screensaverOverlay){opacity:0!important;transform:scale(.985);filter:blur(8px);pointer-events:none!important;transition:opacity .55s ease,transform .7s ease,filter .7s ease;}
+.ss-overlay{font-family:Calibri,Arial,sans-serif!important;}
+.ss-overlay *:not(i){font-family:Calibri,Arial,sans-serif!important;}
+.ss-overlay .font-mono{font-family:Calibri,Arial,sans-serif!important;}
+#screensaverOverlay main{max-width:1500px;width:100%;margin-left:auto;margin-right:auto;padding-left:clamp(24px,4vw,72px);padding-right:clamp(24px,4vw,72px);}
+#screensaverOverlay .ss-main-clock{font-family:Calibri,Arial,sans-serif!important;font-variant-numeric:tabular-nums;direction:ltr!important;unicode-bidi:isolate!important;}
+#themeChoices .theme-choice{position:relative;min-height:58px;transition:all .2s ease;outline:2px solid transparent;outline-offset:2px;}
+#themeChoices .theme-choice.theme-active{outline:2px solid #38bdf8;box-shadow:0 0 0 3px rgba(56,189,248,.16),0 10px 28px rgba(0,0,0,.22);background:rgba(56,189,248,.16)!important;color:#fff!important;transform:translateY(-1px);}
+#themeChoices .theme-choice.theme-active::after{content:'✓ فعال';position:absolute;left:7px;bottom:5px;font-size:10px;font-weight:700;color:#7dd3fc;}
+#screensaverOverlay .mini-day-selected{outline:2px solid #f8fafc;outline-offset:-2px;background:rgba(14,165,233,.34)!important;color:#fff!important;box-shadow:0 0 0 2px rgba(56,189,248,.25),0 5px 16px rgba(14,165,233,.22);}#screensaverOverlay[data-theme="winBlue"]{background:radial-gradient(circle at 18% 20%,rgba(14,165,233,.18),transparent 34%),radial-gradient(circle at 82% 72%,rgba(79,70,229,.16),transparent 38%),#050811!important;}
+#screensaverOverlay[data-theme="aurora"]{background:radial-gradient(circle at 18% 20%,rgba(16,185,129,.24),transparent 34%),radial-gradient(circle at 82% 72%,rgba(20,184,166,.20),transparent 38%),#03100d!important;}
+#screensaverOverlay[data-theme="cyberpunk"]{background:radial-gradient(circle at 18% 20%,rgba(168,85,247,.26),transparent 34%),radial-gradient(circle at 82% 72%,rgba(236,72,153,.22),transparent 38%),#0b0311!important;}
+#screensaverOverlay[data-theme="aurora"] .text-sky-400,#screensaverOverlay[data-theme="aurora"] .text-sky-300{color:#34d399!important;}
+#screensaverOverlay[data-theme="cyberpunk"] .text-sky-400,#screensaverOverlay[data-theme="cyberpunk"] .text-sky-300{color:#e879f9!important;}
+#screensaverOverlay[data-theme="aurora"] .win-acrylic,#screensaverOverlay[data-theme="aurora"] .win-acrylic-subtle{border-color:rgba(52,211,153,.24)!important;}
+#screensaverOverlay[data-theme="cyberpunk"] .win-acrylic,#screensaverOverlay[data-theme="cyberpunk"] .win-acrylic-subtle{border-color:rgba(232,121,249,.26)!important;}
+#screensaverOverlay .theme-choice{min-height:64px!important;padding:14px 10px!important;}
+/* Larger, easier-to-hit action buttons in the main app */
+.toolbar button,.primary,.secondary,.danger{min-height:46px!important;padding:12px 20px!important;font-size:15px!important;border-radius:12px!important;}
+
+</style></head>
+<body><div class="blob b1"></div><div class="blob b2"></div><div class="toast" id="toast"></div>
+<header><div><h1>مدیریت کارها</h1></div><span id="todayLabel"></span></header>
+<div class="wrap">
+<div class="grid">
+<div class="card stat">کل کارها<b id="total">0</b></div>
+<div class="card stat">امروز<b id="todayCount">0</b></div>
+<div class="card stat">در حال انجام<b id="doingCount">0</b></div>
+<div class="card stat">عقب‌افتاده<b id="overdueCount">0</b></div>
+</div>
+<div class="tabs">
+<button class="tab active" data-panel="dashboard">🏠 داشبورد</button>
+<button class="tab" data-panel="calendar">📅 تقویم</button>
+<button class="tab" data-panel="tasks">✅ کارها</button>
+<button class="tab" data-panel="people">👥 مسئولین</button>
+</div>
+<section class="panel active" id="dashboard">
+<div class="toolbar"><h2>کارهای نزدیک و مهم</h2><button class="primary" onclick="openTask()">＋ کار جدید</button></div>
+<div id="dashboardList"></div>
+</section>
+<section class="panel" id="calendar">
+<div class="toolbar"><h2>تقویم شمسی</h2><div><button class="secondary" onclick="changeMonth(-1)">ماه قبل</button> <button class="secondary" onclick="goToday()">امروز</button> <button class="secondary" onclick="changeMonth(1)">ماه بعد</button></div></div>
+<div class="calendar-head"><h3 id="monthTitle"></h3></div>
+<div class="calendar" id="calendarGrid"></div>
+</section>
+<section class="panel" id="tasks">
+<div class="toolbar"><h2>همه کارها</h2><button class="primary" onclick="openTask()">＋ کار جدید</button></div>
+<div id="tasksTable"></div>
+</section>
+<section class="panel" id="people">
+<div class="toolbar"><h2>مسئولین تیم</h2><button class="primary" onclick="openPerson()">＋ افزودن مسئول</button></div>
+<div id="peopleTable"></div>
+</section>
+</div>
+<div class="modal" id="taskModal"><div class="modalbox">
+<h2 id="taskModalTitle">ایجاد کار جدید</h2>
+<form id="taskForm"><input id="taskId" type="hidden"/>
+<div class="formgrid">
+<label>عنوان کار*<input id="title" required=""/></label>
+<label>مسئول*<select id="assignee" required=""></select></label>
+<label>تاریخ موعد (شمسی)*
+<input id="dueDate" required="" type="hidden"/>
+<button class="date-picker-btn" id="dueDateBtn" onclick="openDatePicker()" type="button">انتخاب تاریخ</button>
+</label>
+<label>ساعت موعد<input id="dueTime" type="time"/></label>
+<label>زمان یادآوری<select id="reminder"><option selected="" value="none">بدون یادآوری</option><option value="5m">۵ دقیقه قبل</option><option value="15m">۱۵ دقیقه قبل</option><option value="30m">۳۰ دقیقه قبل</option><option value="1h">۱ ساعت قبل</option><option value="1d">۱ روز قبل</option><option value="1w">۱ هفته قبل</option></select></label>
+<label>اولویت<select id="priority"><option value="low">کم</option><option selected="" value="medium">متوسط</option><option value="high">بالا</option></select></label>
+<label>وضعیت<select id="status"><option value="todo">انجام نشده</option><option value="doing">در حال انجام</option><option value="done">انجام شده</option><option value="cancel">لغو شده</option></select></label>
+<label class="full">توضیحات<textarea id="description"></textarea></label>
+</div>
+<div class="actions"><button class="primary">ذخیره</button><button class="secondary" onclick="closeModal('taskModal')" type="button">انصراف</button></div>
+</form></div></div>
+<div class="modal" id="personModal"><div class="modalbox">
+<h2 id="personModalTitle">افزودن مسئول</h2>
+<form id="personForm"><input id="personId" type="hidden"/>
+<div class="formgrid">
+<label>نام و نام خانوادگی*<input id="personName" required=""/></label>
+<label>شماره تماس<input id="personPhone" type="tel"/></label>
+<label>ایمیل<input id="personEmail" type="email"/></label>
+<label>سمت / نقش<input id="personRole"/></label>
+<label class="full">توضیحات<textarea id="personNotes"></textarea></label>
+</div>
+<div class="actions"><button class="primary">ذخیره</button><button class="secondary" onclick="closeModal('personModal')" type="button">انصراف</button></div>
+</form></div></div>
+<div class="modal" id="descriptionModal"><div class="modalbox">
+<h2 id="descriptionTitle">توضیحات کار</h2>
+<div class="card" id="descriptionContent" style="white-space:pre-wrap;line-height:2;margin-top:14px"></div>
+<div class="actions"><button class="secondary" onclick="closeModal('descriptionModal')" type="button">بستن</button></div>
+</div></div>
+<div class="modal" id="datePickerModal"><div class="picker-box">
+<div class="picker-head"><button onclick="pickerMonth(-1)" type="button">‹</button><div class="picker-title" id="pickerTitle"></div><button onclick="pickerMonth(1)" type="button">›</button></div>
+<div class="picker-week"><div>ش</div><div>ی</div><div>د</div><div>س</div><div>چ</div><div>پ</div><div>ج</div></div>
+<div class="picker-days" id="pickerDays"></div>
+<div class="actions"><button class="secondary" onclick="closeModal('datePickerModal')" type="button">انصراف</button></div>
+</div></div>
+<script>
+const KEY='team_calendar_v2';
+let db=JSON.parse(localStorage.getItem(KEY)||'null')||{tasks:[],people:[]};
+let viewDate=new Date(); viewDate.setDate(1);
+let calendarJYear=0, calendarJMonth=0, calendarJDay=0;
+[calendarJYear,calendarJMonth,calendarJDay]=gregorianToJalali(viewDate.getFullYear(),viewDate.getMonth()+1,viewDate.getDate());
+let pickerDate=new Date();
+let pickerJYear=0, pickerJMonth=0;
+
+function div(a,b){return ~~(a/b)}
+function gregorianToJalali(gy,gm,gd){
+ let g_d_m=[0,31,59,90,120,151,181,212,243,273,304,334], jy=(gy<=1600?0:979), gy2=(gy<=1600?gy-621:gy-1600), days=365*gy2+div(gy2+3,4)-div(gy2+99,100)+div(gy2+399,400)-80+gd+g_d_m[gm-1];
+ if(gm>2) days+=((gy%4===0&&gy%100!==0)||(gy%400===0))?1:0;
+ jy+=33*div(days,12053); days%=12053; jy+=4*div(days,1461); days%=1461;
+ if(days>365){jy+=div(days-1,365);days=(days-1)%365}
+ let jm=days<186?1+div(days,31):7+div(days-186,30), jd=1+(days<186?days%31:(days-186)%30);
+ return [jy,jm,jd]
+}
+function jalaliToGregorian(jy,jm,jd){
+ let jy2=jy-979;
+ let days=365*jy2+div(jy2,33)*8+div((jy2%33)+3,4)+78+jd+(jm<7?(jm-1)*31:(jm-7)*30+186);
+ let gy=1600+400*div(days,146097); days%=146097;
+ if(days>36524){gy+=100*div(--days,36524);days%=36524;if(days>=365)days++}
+ gy+=4*div(days,1461);days%=1461;
+ if(days>365){gy+=div(days-1,365);days=(days-1)%365}
+ let gd=days+1;
+ let sal_a=[0,31,((gy%4===0&&gy%100!==0)||(gy%400===0))?29:28,31,30,31,30,31,31,30,31,30,31],gm=0;
+ while(gd>sal_a[gm]){gd-=sal_a[gm];gm++}
+ return new Date(gy,gm-1,gd)
+}
+function pad(n){return String(n).padStart(2,'0')}
+function jalaliLabel(y,m,d){return `${y}/${pad(m)}/${pad(d)}`}
+function openDatePicker(){
+ let iso=document.getElementById('dueDate').value;
+ let base=new Date();
+ [pickerJYear,pickerJMonth]=gregorianToJalali(base.getFullYear(),base.getMonth()+1,base.getDate());
+ renderPicker();
+ document.getElementById('datePickerModal').classList.add('show');
+}
+function renderPicker(){
+ let jy=pickerJYear, jm=pickerJMonth;
+ document.getElementById('pickerTitle').textContent=`${['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'][jm-1]} ${jy}`;
+ let first=jalaliToGregorian(jy,jm,1), start=(first.getDay()+1)%7, days=jm<=6?31:(jm<=11?30:((jy%33===1||jy%33===5||jy%33===9||jy%33===13||jy%33===17||jy%33===22||jy%33===26||jy%33===30)?30:29));
+ let selected=document.getElementById('dueDate').value, html='';
+ for(let i=0;i<start;i++)html+='<div class="picker-empty"></div>';
+ let todayIso=isoDate(new Date());
+ for(let d=1;d<=days;d++){
+   let g=jalaliToGregorian(jy,jm,d), iso=isoDate(g), sel=iso===selected?' selected':'', tod=iso===todayIso?' today':'';
+   html+=`<button type="button" class="picker-day${sel}${tod}" onclick="selectPickerDate('${iso}')">${d}</button>`;
+ }
+ document.getElementById('pickerDays').innerHTML=html;
+}
+function pickerMonth(n){
+ pickerJMonth+=Number(n);
+ if(pickerJMonth<1){pickerJYear--;pickerJMonth=12}
+ if(pickerJMonth>12){pickerJYear++;pickerJMonth=1}
+ renderPicker();
+}
+function selectPickerDate(iso){let g=new Date(iso+'T12:00:00'), [jy,jm,jd]=gregorianToJalali(g.getFullYear(),g.getMonth()+1,g.getDate());document.getElementById('dueDate').value=iso;document.getElementById('dueDateBtn').textContent=jalaliLabel(jy,jm,jd);closeModal('datePickerModal')}
+
+
+function completeTask(id){
+  const t=db.tasks.find(x=>x.id===id);
+  if(!t || t.status==='done') return;
+  t.status='done';
+  save();
+  if(window.showAppToast) window.showAppToast('کار به بخش انجام‌شده منتقل شد','success');
+}
+window.completeTask=completeTask;
+
+function save(){
+  const seenIds=new Set();
+  db.tasks=(db.tasks||[]).filter(t=>{
+    if(!t.id) t.id=uid();
+    const id=String(t.id);
+    if(seenIds.has(id)) return false;
+    seenIds.add(id);
+    return true;
+  });
+  localStorage.setItem(KEY,JSON.stringify(db));
+  render();
+  window.dispatchEvent(new CustomEvent('team-calendar-updated',{detail:JSON.parse(JSON.stringify(db))}));
+}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+function fmt(d){return new Intl.DateTimeFormat('fa-IR-u-ca-gregory',{year:'numeric',month:'2-digit',day:'2-digit'}).format(d)}
+function isoDate(d){return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`}
+function today(){let d=new Date();d.setHours(0,0,0,0);return d}
+function taskDate(t){return new Date(t.dueDate+'T'+(t.dueTime||'23:59'))}
+function statusText(s){return {todo:'انجام نشده',doing:'در حال انجام',done:'انجام شده',cancel:'لغو شده'}[String(s)]||'نامشخص'}
+function priorityText(p){return {low:'کم',medium:'متوسط',high:'بالا'}[p]||p}
+function personName(id){return db.people.find(p=>p.id===id)?.name||'بدون مسئول'}
+function isOverdue(t){return t.status!=='done'&&t.status!=='cancel'&&taskDate(t)<new Date()}
+function render(){
+document.getElementById('todayLabel').textContent='امروز: '+fmt(new Date());
+let all=db.tasks;
+document.getElementById('total').textContent=all.length;
+document.getElementById('todayCount').textContent=all.filter(t=>t.dueDate===isoDate(new Date())).length;
+document.getElementById('doingCount').textContent=all.filter(t=>t.status==='doing').length;
+document.getElementById('overdueCount').textContent=all.filter(isOverdue).length;
+renderDashboard();renderTasks();renderPeople();renderCalendar();populateAssignees();
+}
+function row(t){
+let over=isOverdue(t), g=new Date(t.dueDate+'T12:00:00'), j=gregorianToJalali(g.getFullYear(),g.getMonth()+1,g.getDate());
+return `<tr><td>${esc(t.title)}</td><td>${esc(personName(t.assignee))}</td><td>${jalaliLabel(j[0],j[1],j[2])} ${t.dueTime||''}</td><td>${priorityText(t.priority)}</td><td><span class="badge ${t.status}">${statusText(t.status)}</span>${over?' <span class="badge todo">عقب‌افتاده</span>':''}</td><td><button class="task-check-btn ${t.status==='done'?'completed':''}" onclick="completeTask('${t.id}')" title="${t.status==='done'?'انجام شده':'انجام شد'}" ${t.status==='done'?'disabled':''}>✓</button> <button class="secondary" onclick="viewDescription('${t.id}')" title="مشاهده توضیحات">👁</button> <button class="secondary" onclick="editTask('${t.id}')">ویرایش</button> <button class="danger" onclick="deleteTask('${t.id}')">حذف</button></td></tr>`
+}
+function renderDashboard(){
+  // داشبورد فقط نمای خلاصه است؛ هر کار با یک شناسه یکتا از لیست اصلی خوانده می‌شود.
+  const seen=new Set();
+  let list=[...db.tasks]
+    .filter(t=>t.status!=='done'&&t.status!=='cancel')
+    .filter(t=>{ if(!t.id || seen.has(String(t.id))) return false; seen.add(String(t.id)); return true; })
+    .sort((a,b)=>taskDate(a)-taskDate(b))
+    .slice(0,10);
+  document.getElementById('dashboardList').innerHTML=list.length?`<table><thead><tr><th>کار</th><th>مسئول</th><th>موعد</th><th>اولویت</th><th>وضعیت</th><th>عملیات</th></tr></thead><tbody>${list.map(row).join('')}</tbody></table>`:'<div class="card empty">کاری برای نمایش وجود ندارد.</div>';
+}
+
+function renderTasks(){
+document.getElementById('tasksTable').innerHTML=db.tasks.length?`<table><thead><tr><th>کار</th><th>مسئول</th><th>موعد</th><th>اولویت</th><th>وضعیت</th><th>عملیات</th></tr></thead><tbody>${db.tasks.map(row).join('')}</tbody></table>`:'<div class="card empty">هنوز کاری ثبت نشده است.</div>';
+}
+function renderPeople(){
+document.getElementById('peopleTable').innerHTML=db.people.length?`<table><thead><tr><th>نام</th><th>شماره تماس</th><th>ایمیل</th><th>نقش</th><th>عملیات</th></tr></thead><tbody>${db.people.map(p=>`<tr><td>${esc(p.name)}</td><td>${esc(p.phone||'-')}</td><td>${esc(p.email||'-')}</td><td>${esc(p.role||'-')}</td><td><button class="secondary" onclick="editPerson('${p.id}')">ویرایش</button> <button class="danger" onclick="deletePerson('${p.id}')">حذف</button></td></tr>`).join('')}</tbody></table>`:'<div class="card empty">هنوز مسئولی اضافه نشده است.</div>';
+}
+function renderCalendar(){
+let jy=calendarJYear,jm=calendarJMonth;
+document.getElementById('monthTitle').textContent=`${['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'][jm-1]} ${jy}`;
+let first=jalaliToGregorian(jy,jm,1), start=(first.getDay()+1)%7;
+let days=jm<=6?31:(jm<=11?30:((jy%33===1||jy%33===5||jy%33===9||jy%33===13||jy%33===17||jy%33===22||jy%33===26||jy%33===30)?30:29));
+let cells=[];
+['شنبه','یکشنبه','دوشنبه','سه‌شنبه','چهارشنبه','پنجشنبه','جمعه'].forEach(x=>cells.push(`<div class="day-name">${x}</div>`));
+for(let i=0;i<start;i++)cells.push('<div></div>');
+let todayIso=isoDate(new Date());
+for(let d=1;d<=days;d++){
+let date=jalaliToGregorian(jy,jm,d), iso=isoDate(date), ts=db.tasks.filter(t=>t.dueDate===iso);
+let todayCls=iso===todayIso?' today':'';
+cells.push(`<div class="day${todayCls}"${iso===todayIso?' data-current-day="true"':''}><div class="daynum">${d}</div>${ts.map(t=>`<div class="event ${t.status==='done'?'done':''} ${isOverdue(t)?'overdue':''}" title="${esc(t.title)}">${esc(t.title)}</div>`).join('')}</div>`);
+}
+document.getElementById('calendarGrid').innerHTML=cells.join('');
+}
+function changeMonth(n){
+calendarJMonth+=Number(n);
+if(calendarJMonth<1){calendarJYear--;calendarJMonth=12}
+if(calendarJMonth>12){calendarJYear++;calendarJMonth=1}
+renderCalendar();
+}
+function goToday(){
+let now=new Date();
+[calendarJYear,calendarJMonth,calendarJDay]=gregorianToJalali(now.getFullYear(),now.getMonth()+1,now.getDate());
+renderCalendar();
+}
+function populateAssignees(){document.getElementById('assignee').innerHTML=db.people.length?db.people.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join(''):'<option value="">ابتدا یک مسئول اضافه کنید</option>'}
+function openTask(id){
+if(!db.people.length){alert('ابتدا از بخش «مسئولین» حداقل یک مسئول اضافه کنید.');return}
+document.getElementById('taskForm').reset();document.getElementById('taskId').value='';document.getElementById('dueDateBtn').textContent='انتخاب تاریخ';
+document.getElementById('status').value='todo';document.getElementById('reminder').value='none';document.getElementById('priority').value='medium';
+document.getElementById('taskModalTitle').textContent='ایجاد کار جدید';
+document.getElementById('taskModal').classList.add('show');
+if(id)editTask(id);
+}
+function editTask(id){
+let t=db.tasks.find(x=>x.id===id);if(!t)return;
+document.getElementById('taskId').value=t.id;document.getElementById('title').value=t.title;document.getElementById('assignee').value=t.assignee;document.getElementById('dueDate').value=t.dueDate;let eg=new Date(t.dueDate+'T12:00:00'), ej=gregorianToJalali(eg.getFullYear(),eg.getMonth()+1,eg.getDate());document.getElementById('dueDateBtn').textContent=jalaliLabel(ej[0],ej[1],ej[2]);document.getElementById('dueTime').value=t.dueTime||'';document.getElementById('reminder').value=t.reminder||'none';document.getElementById('priority').value=t.priority;document.getElementById('status').value=t.status;document.getElementById('description').value=t.description||'';
+document.getElementById('taskModalTitle').textContent='ویرایش کار';document.getElementById('taskModal').classList.add('show');
+}
+document.getElementById('taskForm').onsubmit=e=>{
+ e.preventDefault();
+ let id=document.getElementById('taskId').value;
+ let t={
+  id:id||uid(),
+  title:document.getElementById('title').value,
+  assignee:document.getElementById('assignee').value,
+  dueDate:document.getElementById('dueDate').value,
+  dueTime:document.getElementById('dueTime').value,
+  reminder:document.getElementById('reminder').value,
+  priority:document.getElementById('priority').value,
+  status:document.getElementById('status').value,
+  description:document.getElementById('description').value
+ };
+ let i=db.tasks.findIndex(x=>x.id===id);
+ if(i>=0)db.tasks[i]=t;else db.tasks.push(t);
+ closeModal('taskModal');save()
+}
+function viewDescription(id){let t=db.tasks.find(x=>x.id===id);if(!t)return;document.getElementById('descriptionTitle').textContent='توضیحات: '+t.title;document.getElementById('descriptionContent').textContent=t.description||'برای این کار توضیحی ثبت نشده است.';document.getElementById('descriptionModal').classList.add('show')}
+function deleteTask(id){if(confirm('این کار حذف شود؟')){db.tasks=db.tasks.filter(t=>t.id!==id);save()}}
+function openPerson(id){document.getElementById('personForm').reset();personId.value='';personModalTitle.textContent='افزودن مسئول';personModal.classList.add('show');if(id)editPerson(id)}
+function editPerson(id){let p=db.people.find(x=>x.id===id);if(!p)return;personId.value=p.id;personName.value=p.name;personPhone.value=p.phone||'';personEmail.value=p.email||'';personRole.value=p.role||'';personNotes.value=p.notes||'';personModalTitle.textContent='ویرایش مسئول';personModal.classList.add('show')}
+document.getElementById('personForm').onsubmit=e=>{e.preventDefault();let id=document.getElementById('personId').value;let p={id:id||uid(),name:document.getElementById('personName').value.trim(),phone:document.getElementById('personPhone').value.trim(),email:document.getElementById('personEmail').value.trim(),role:document.getElementById('personRole').value.trim(),notes:document.getElementById('personNotes').value};let i=db.people.findIndex(x=>x.id===id);if(i>=0){db.people[i]=p}else{db.people.push(p)}closeModal('personModal');save()}
+function deletePerson(id){if(db.tasks.some(t=>t.assignee===id)){alert('این مسئول هنوز کار اختصاص‌یافته دارد. ابتدا مسئول کارها را تغییر دهید.');return}if(confirm('این مسئول حذف شود؟')){db.people=db.people.filter(p=>p.id!==id);save()}}
+function closeModal(id){document.getElementById(id).classList.remove('show')}
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById(b.dataset.panel).classList.add('active');if(b.dataset.panel==='calendar'){
+viewDate=new Date();
+viewDate.setHours(0,0,0,0);
+[calendarJYear,calendarJMonth,calendarJDay]=gregorianToJalali(viewDate.getFullYear(),viewDate.getMonth()+1,viewDate.getDate());
+renderCalendar();
+}})
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+render();
+</script>
+<script>
+document.querySelectorAll('button').forEach(b=>b.addEventListener('click',e=>{
+ const c=document.createElement('span');c.className='ripple';
+ const r=b.getBoundingClientRect();let s=Math.max(r.width,r.height);
+ c.style.width=c.style.height=s+'px';c.style.left=(e.clientX-r.left-s/2)+'px';c.style.top=(e.clientY-r.top-s/2)+'px';
+ b.appendChild(c);setTimeout(()=>c.remove(),650);
+}));
+function showToast(t){let x=document.getElementById('toast');x.textContent=t;x.classList.add('show');setTimeout(()=>x.classList.remove('show'),2200);}
+const oldSave=save;save=function(){oldSave();showToast('اطلاعات با موفقیت ذخیره شد');}
+</script>
+
+<script>
+(function(){
+ if("Notification" in window && Notification.permission==="default"){
+   Notification.requestPermission();
+ }
+ const sent=new Set();
+ function beep(){
+   try{
+     const a=new (window.AudioContext||window.webkitAudioContext)();
+     const o=a.createOscillator(),g=a.createGain();
+     o.connect(g);g.connect(a.destination);
+     o.frequency.value=880;g.gain.value=0.03;
+     o.start();setTimeout(()=>{o.stop();a.close();},180);
+   }catch(e){}
+ }
+ window.showAppToast=function(msg,type){
+   const t=document.getElementById('toast'); if(!t) return;
+   t.className='toast '+(type||'info')+' show';
+   t.textContent=msg;
+   setTimeout(()=>t.classList.remove('show'),2500);
+ }
+ setInterval(()=>{
+   document.querySelectorAll('[data-reminder-title]').forEach(el=>{
+      const ts=Number(el.dataset.reminderTime||0);
+      const id=el.dataset.reminderId||el.dataset.reminderTitle;
+      if(ts && Date.now()>=ts && !sent.has(id)){
+         sent.add(id);
+         showAppToast("یادآوری: "+el.dataset.reminderTitle,"warning");
+         beep();
+         if("Notification" in window && Notification.permission==="granted"){
+            new Notification("یادآوری کار",{body:el.dataset.reminderTitle});
+         }
+      }
+   });
+ },30000);
+})();
+</script>
+<script>
+document.querySelectorAll('nav a,[data-page],.menu-item').forEach(el=>{
+ el.addEventListener('click',()=>{
+   requestAnimationFrame(()=>{
+     const active=document.querySelector('.active,.page.active,.content.active');
+     if(active){active.classList.remove('fade-switch');void active.offsetWidth;active.classList.add('fade-switch');}
+   });
+ });
+});
+const _alert=window.alert;
+window.alert=function(msg){
+ if(window.showAppToast){showAppToast(msg,'success');}
+ else _alert(msg);
+};
+</script>
+<script>
+document.querySelectorAll('[data-count], .stat-value').forEach(el=>{
+ let end=parseInt((el.dataset.count||el.textContent).replace(/\D/g,''))||0;
+ if(!end)return;
+ let cur=0,inc=Math.max(1,Math.ceil(end/50));
+ let t=setInterval(()=>{
+   cur+=inc;
+   if(cur>=end){cur=end;clearInterval(t);}
+   el.textContent=cur;
+ },18);
+});
+</script>
+<script>
+document.addEventListener('submit',e=>{
+ const b=e.target.querySelector('button[type=submit]');
+ if(b){b.classList.add('loading');setTimeout(()=>b.classList.remove('loading'),900);}
+});
+</script>
+<script>
+(function(){
+const KEY='task_notified';
+const sent=JSON.parse(localStorage.getItem(KEY)||'{}');
+if(Notification&&Notification.permission==='default'){Notification.requestPermission();}
+function notify(title,id){
+ if(sent[id]) return;
+ sent[id]=true; localStorage.setItem(KEY,JSON.stringify(sent));
+ try{if(Notification.permission==='granted')new Notification('یادآوری کار',{body:title});}catch(e){}
+}
+setInterval(()=>{
+ document.querySelectorAll('[data-reminder-title]').forEach(el=>{
+   const t=+el.dataset.reminderTime||0;
+   const id=el.dataset.reminderId||el.dataset.reminderTitle;
+   if(t && Date.now()>=t) notify(el.dataset.reminderTitle,id);
+ });
+},30000);
+})();
+</script>
+<script>(function(){const t=document.createElement('div');t.className='tooltip';document.body.appendChild(t);document.querySelectorAll('button,[title]').forEach(el=>{el.addEventListener('mousemove',e=>{const txt=el.title||el.dataset.tooltip;if(!txt)return;t.textContent=txt;t.style.opacity=1;t.style.left=e.pageX+12+'px';t.style.top=e.pageY+12+'px';});el.addEventListener('mouseleave',()=>t.style.opacity=0);});})();</script><script>
+(()=>{const t=document.createElement('div');t.className='tooltip';document.body.appendChild(t);
+document.querySelectorAll('[title],[data-tooltip]').forEach(e=>{e.addEventListener('mousemove',ev=>{t.textContent=e.dataset.tooltip||e.title;t.style.left=ev.pageX+12+'px';t.style.top=ev.pageY+12+'px';t.classList.add('show')});e.addEventListener('mouseleave',()=>t.classList.remove('show'));});
+})();</script>
+<script>
+(function(){
+if('Notification'in window&&Notification.permission==='default'){Notification.requestPermission();}
+function notifyTask(task){
+ if(Notification.permission==='granted'){
+   new Notification('یادآوری کار',{body:task.title});
+ }
+}
+window.checkTaskReminders=function(tasks){
+ const sent=JSON.parse(localStorage.getItem('sentReminders')||'{}');
+ const now=Date.now();
+ tasks.forEach(t=>{
+   if(!t.dueDate||!t.dueTime)return;
+   const due=new Date(t.dueDate+'T'+t.dueTime).getTime();
+   (t.reminderTypes||[]).forEach(r=>{
+     const mins={ '1week':10080,'1day':1440,'1hour':60,'30min':30,'10min':10}[r];
+     if(mins==null)return;
+     const key=t.id+'_'+r;
+     if(!sent[key] && now>=due-mins*60000){
+       notifyTask(t);
+       sent[key]=true;
+     }
+   });
+ });
+ localStorage.setItem('sentReminders',JSON.stringify(sent));
+}
+setInterval(()=>{
+ if(window.tasks) window.checkTaskReminders(window.tasks);
+},30000);
+})();
+</script><div aria-hidden="true" class="ss-overlay" id="screensaverOverlay"><canvas class="absolute inset-0 w-full h-full pointer-events-none z-0" id="particleCanvas"></canvas><div class="absolute inset-0 pointer-events-none overflow-hidden z-0 transition-opacity duration-1000" id="ambientOrbs">
+<div class="ambient-glow-1 absolute -top-40 -left-20 w-[550px] h-[550px] bg-sky-600/25 rounded-full filter blur-[120px]"></div>
+<div class="ambient-glow-2 absolute top-1/2 -right-40 w-[600px] h-[600px] bg-indigo-600/20 rounded-full filter blur-[140px]"></div>
+<div class="ambient-glow-1 absolute -bottom-32 left-1/3 w-[500px] h-[500px] bg-teal-500/15 rounded-full filter blur-[130px]"></div>
+</div><div class="scanlines absolute inset-0 pointer-events-none"></div><main class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 my-auto items-center">
+<!-- Left / Center Massive Clock Widget -->
+<div class="lg:col-span-7 flex flex-col justify-center items-start pr-2">
+<!-- Live Clock Display -->
+<div class="relative group">
+<div class="ss-main-clock flex items-baseline font-mono tracking-tighter drop-shadow-[0_10px_25px_rgba(0,120,212,0.4)]">
+<span class="text-7xl sm:text-9xl md:text-[9.5rem] font-extrabold text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-100 to-slate-400" id="clockHours">00</span>
+<span class="text-6xl sm:text-8xl md:text-9xl font-light text-sky-400 mx-1 animate-pulse">:</span>
+<span class="text-7xl sm:text-9xl md:text-[9.5rem] font-extrabold text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-100 to-slate-400" id="clockMinutes">00</span>
+<span class="text-4xl sm:text-5xl md:text-6xl font-light text-sky-300/70 ml-2">:</span>
+<span class="text-4xl sm:text-5xl md:text-6xl font-normal text-sky-400/90 w-[2ch]" id="clockSeconds">00</span>
+</div>
+</div>
+<!-- Jalali Date Display -->
+<div class="mt-4 flex flex-wrap items-center gap-3">
+<div class="px-4 py-2 rounded-2xl win-acrylic border border-white/10 flex items-center gap-3">
+<i class="ph-duotone ph-calendar-blank text-sky-400 text-2xl"></i>
+<div>
+<div class="text-lg sm:text-xl font-bold text-slate-100" id="jalaliFullDate">در حال دریافت تاریخ...</div>
+<div class="text-xs text-slate-400 font-mono tracking-wide" id="gregorianSubDate">--</div>
+</div>
+</div>
+<div class="px-3.5 py-2 rounded-2xl win-acrylic-subtle flex items-center gap-2 text-xs text-slate-300">
+<i class="ph-fill ph-hourglass-high text-amber-400"></i>
+<span id="quarterInfo">هفته جاری</span>
+</div>
+</div>
+<!-- Live Team Stats Bar -->
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-8 w-full max-w-2xl">
+<div class="win-acrylic rounded-2xl p-3.5 relative overflow-hidden group border-r-4 border-r-sky-500">
+<div class="text-xs text-slate-400 mb-1">کل وظایف</div>
+<div class="text-2xl font-bold font-mono text-white flex items-center justify-between">
+<span id="statTotal">0</span>
+<i class="ph-bold ph-clipboard-text text-sky-400/50 text-xl group-hover:text-sky-400 transition-colors"></i>
+</div>
+</div>
+<div class="win-acrylic rounded-2xl p-3.5 relative overflow-hidden group border-r-4 border-r-teal-500">
+<div class="text-xs text-slate-400 mb-1">موعد امروز</div>
+<div class="text-2xl font-bold font-mono text-teal-300 flex items-center justify-between">
+<span id="statToday">0</span>
+<i class="ph-bold ph-calendar-star text-teal-400/50 text-xl group-hover:text-teal-400 transition-colors"></i>
+</div>
+</div>
+<div class="win-acrylic rounded-2xl p-3.5 relative overflow-hidden group border-r-4 border-r-amber-500">
+<div class="text-xs text-slate-400 mb-1">در دست انجام</div>
+<div class="text-2xl font-bold font-mono text-amber-300 flex items-center justify-between">
+<span id="statDoing">0</span>
+<i class="ph-bold ph-clock-countdown text-amber-400/50 text-xl group-hover:text-amber-400 transition-colors"></i>
+</div>
+</div>
+<div class="win-acrylic rounded-2xl p-3.5 relative overflow-hidden group border-r-4 border-r-rose-500">
+<div class="text-xs text-slate-400 mb-1">عقب‌افتاده</div>
+<div class="text-2xl font-bold font-mono text-rose-300 flex items-center justify-between">
+<span id="statOverdue">0</span>
+<i class="ph-bold ph-warning-circle text-rose-400/50 text-xl group-hover:text-rose-400 transition-colors"></i>
+</div>
+</div>
+</div>
+</div>
+<div class="lg:col-span-5 flex flex-col gap-5 w-full">
+<!-- Auto-Rotating Active Tasks Card -->
+<div class="win-acrylic rounded-3xl p-5 relative overflow-hidden border border-white/10 shadow-2xl">
+<div class="flex items-center justify-between pb-3 border-b border-white/10 mb-4">
+<div class="flex items-center gap-2">
+<div class="w-2.5 h-2.5 rounded-full bg-sky-400 animate-ping"></div>
+<h3 class="font-bold text-sm text-slate-200">کارهای اولویت‌دار و نزدیک</h3>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="text-xs font-mono text-slate-400" id="carouselPageIndicator">1 / 1</span>
+<button class="p-1 rounded-lg hover:bg-white/10 text-slate-300" id="prevTaskBtn"><i class="ph-bold ph-caret-right"></i></button>
+<button class="p-1 rounded-lg hover:bg-white/10 text-slate-300" id="nextTaskBtn"><i class="ph-bold ph-caret-left"></i></button>
+</div>
+</div>
+<!-- Task Slide Container -->
+<div class="min-h-[145px] flex flex-col justify-between transition-all duration-500" id="taskCarouselBox">
+<!-- Injected via JavaScript -->
+</div>
+<!-- Progress bar for auto-rotation -->
+<div class="w-full bg-white/5 h-1 rounded-full mt-4 overflow-hidden">
+<div class="h-full bg-gradient-to-r from-sky-400 to-indigo-500 transition-all duration-100 ease-linear" id="carouselProgressBar" style="width: 0%"></div>
+</div>
+</div>
+<!-- Jalali Compact Mini-Calendar Card -->
+<div class="win-acrylic rounded-3xl p-5 relative overflow-hidden border border-white/10">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-2">
+<i class="ph-duotone ph-calendar text-teal-400 text-lg"></i>
+<span class="font-bold text-sm text-slate-100" id="miniCalTitle">تقویم ماه</span>
+</div>
+<div class="flex items-center gap-1">
+<button class="p-1 rounded-lg hover:bg-white/10 text-slate-400 hover:text-white" onclick="navigateMiniMonth(-1)"><i class="ph-bold ph-caret-right"></i></button>
+<button class="text-xs px-2 py-0.5 rounded-md win-acrylic-subtle text-sky-300 hover:bg-white/10" onclick="goTodayMiniCal()">امروز</button>
+<button class="p-1 rounded-lg hover:bg-white/10 text-slate-400 hover:text-white" onclick="navigateMiniMonth(1)"><i class="ph-bold ph-caret-left"></i></button>
+</div>
+</div>
+<!-- Weekday Headers -->
+<div class="grid grid-cols-7 gap-1 text-center text-[11px] font-semibold text-slate-400 mb-2">
+<span>ش</span><span>ی</span><span>د</span><span>س</span><span>چ</span><span>پ</span><span>ج</span>
+</div>
+<!-- Calendar Cells -->
+<div class="grid grid-cols-7 gap-1.5 text-center text-xs" id="miniCalendarGrid">
+<!-- Calendar Days rendered via JS -->
+</div>
+</div>
+</div>
+</main><footer class="relative z-10 flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-white/5 hud-control" id="bottomFooter">
+<div class="flex items-center gap-3">
+<button class="win-acrylic-subtle px-3 py-1.5 rounded-xl text-xs font-medium text-slate-300 hover:text-white flex items-center gap-2 transition-all" id="toggleSettingsBtn">
+<i class="ph-bold ph-sliders-horizontal text-sky-400 text-sm"></i>
+<span>تنظیمات اسکرین‌سیور</span>
+</button>
+<button class="win-acrylic-subtle px-3 py-1.5 rounded-xl text-xs font-medium text-slate-300 hover:text-white flex items-center gap-2 transition-all" id="ssFullscreenBtn" title="تمام صفحه">
+<i class="ph-bold ph-arrows-out text-sky-400 text-sm"></i>
+<span>تمام صفحه</span>
+</button>
+<button class="win-acrylic-subtle px-3 py-1.5 rounded-xl text-xs font-medium text-slate-300 hover:text-white flex items-center gap-2 transition-all" id="toggleAudioBtn">
+<i class="ph-bold ph-speaker-slash text-slate-400 text-sm" id="audioIcon"></i>
+<span id="audioLabel">صدای ملایم (خاموش)</span>
+</button>
+</div>
+<!-- Quick Tip & Auto-hide indicator -->
+<div class="flex items-center gap-3 text-xs text-slate-400">
+<span class="inline-flex items-center gap-1">
+<i class="ph-bold ph-mouse-simple text-sky-400"></i> برای خروج از اسکرین‌سیور کلید ESC را بزنید
+      </span>
+<span>•</span>
+<span id="batteryOrTimeNote">اسکرین‌سیور مدیریت کارها</span>
+</div>
+</footer><div class="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden" id="settingsModal">
+<div class="win-acrylic rounded-3xl w-full max-w-lg p-6 border border-white/15 shadow-2xl relative">
+<div class="flex items-center justify-between pb-3 border-b border-white/10 mb-4">
+<div class="flex items-center gap-2">
+<i class="ph-bold ph-gear-six text-sky-400 text-xl"></i>
+<h2 class="font-bold text-base text-white">شخصی‌سازی اسکرین‌سیور</h2>
+</div>
+<button class="text-slate-400 hover:text-white p-1 rounded-lg" id="closeSettingsBtn">
+<i class="ph-bold ph-x text-lg"></i>
+</button>
+</div>
+<div class="space-y-4 text-sm">
+<!-- Themes selection -->
+<div>
+<label class="block text-xs font-semibold text-slate-300 mb-2">رنگ‌بندی امبینت (Windows Ambient Theme)</label>
+<div class="grid grid-cols-3 gap-2" id="themeChoices">
+<button type="button" class="theme-choice win-acrylic-subtle p-2.5 rounded-xl border border-sky-500/40 text-xs font-medium text-sky-300 hover:bg-sky-500/20 text-center" data-theme="winBlue" onclick="setAmbientTheme('winBlue')">
+              آبی کلاسیک ویندوز
+            </button>
+<button type="button" class="theme-choice win-acrylic-subtle p-2.5 rounded-xl border border-teal-500/40 text-xs font-medium text-teal-300 hover:bg-teal-500/20 text-center" data-theme="aurora" onclick="setAmbientTheme('aurora')">
+              شفق قطبی سبز
+            </button>
+<button type="button" class="theme-choice win-acrylic-subtle p-2.5 rounded-xl border border-purple-500/40 text-xs font-medium text-purple-300 hover:bg-purple-500/20 text-center" data-theme="cyberpunk" onclick="setAmbientTheme('cyberpunk')">
+              نئون شبانه بنفش
+            </button>
+</div>
+</div>
+<!-- Task rotation speed -->
+<div>
+<div class="flex justify-between text-xs text-slate-300 mb-1">
+<span>سرعت تعویض وظایف (ثانیه)</span>
+<span id="rotationSpeedVal">۶ ثانیه</span>
+</div>
+<input class="w-full accent-sky-400 cursor-pointer" id="rotationRange" max="15" min="3" type="range" value="6"/>
+</div>
+<!-- Density of background stars/particles -->
+<div>
+<div class="flex justify-between text-xs text-slate-300 mb-1">
+<span>تراکم ذرات شناور فضایی</span>
+<span id="particleDensityVal">متوسط</span>
+</div>
+<input class="w-full accent-sky-400 cursor-pointer" id="particlesRange" max="120" min="20" type="range" value="60"/>
+</div>
+<!-- Screensaver Auto Idle Fade timeout -->
+<div>
+<div class="flex justify-between text-xs text-slate-300 mb-1">
+<span>مدت زمان ورود خودکار به اسکرین‌سیور</span>
+<span id="idleTimeoutVal">۵ دقیقه</span>
+</div>
+<input class="w-full accent-sky-400 cursor-pointer" id="idleRange" max="60" min="1" step="1" type="range" value="5"/>
+</div>
+<div class="pt-3 border-t border-white/10 flex justify-end">
+<button class="px-5 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-medium text-xs shadow-lg shadow-sky-600/30" id="saveSettingsBtn">
+            تأیید و بازگشت
+          </button>
+</div>
+</div>
+</div>
+</div></div><script id="integrated-screensaver-clock">
+(function(){
+  const pad2 = n => String(n).padStart(2,'0');
+  function updateScreensaverClock(){
+    const now = new Date();
+    const h = document.getElementById('clockHours');
+    const m = document.getElementById('clockMinutes');
+    const sec = document.getElementById('clockSeconds');
+    if(h) h.textContent = pad2(now.getHours());
+    if(m) m.textContent = pad2(now.getMinutes());
+    if(sec) sec.textContent = pad2(now.getSeconds());
+
+    if(typeof gregorianToJalali === 'function'){
+      const [jy,jm,jd] = gregorianToJalali(now.getFullYear(), now.getMonth()+1, now.getDate());
+      const days = ['یکشنبه','دوشنبه','سه‌شنبه','چهارشنبه','پنجشنبه','جمعه','شنبه'];
+      const months = (typeof jalaliMonthNames !== 'undefined')
+        ? jalaliMonthNames
+        : ['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
+      const full = document.getElementById('jalaliFullDate');
+      const greg = document.getElementById('gregorianSubDate');
+      const quarter = document.getElementById('quarterInfo');
+      if(full) full.textContent = `${days[now.getDay()]}، ${jd} ${months[jm-1]} ${jy}`;
+      if(greg) greg.textContent = now.toLocaleDateString('fa-IR-u-ca-gregory',{year:'numeric',month:'long',day:'numeric'});
+      if(quarter){
+        let season = 'بهار';
+        if(jm>=4 && jm<=6) season='تابستان';
+        else if(jm>=7 && jm<=9) season='پاییز';
+        else if(jm>=10) season='زمستان';
+        quarter.textContent = `فصل ${season} • روز ${jd} از ${months[jm-1]}`;
+      }
+    }
+  }
+  window.updateScreensaverClock = updateScreensaverClock;
+  updateScreensaverClock();
+  setInterval(updateScreensaverClock,1000);
+})();
+</script><script id="integrated-screensaver-script">(function(){
+
+    /* Jalali and Gregorian Conversions preserved exactly from user's schema */
+    function div(a, b) { return ~~(a / b); }
+
+    function gregorianToJalali(gy, gm, gd) {
+      let g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
+      let jy = (gy <= 1600 ? 0 : 979);
+      let gy2 = (gy <= 1600 ? gy - 621 : gy - 1600);
+      let days = 365 * gy2 + div(gy2 + 3, 4) - div(gy2 + 99, 100) + div(gy2 + 399, 400) - 80 + gd + g_d_m[gm - 1];
+      if (gm > 2) days += ((gy % 4 === 0 && gy % 100 !== 0) || (gy % 400 === 0)) ? 1 : 0;
+      jy += 33 * div(days, 12053);
+      days %= 12053;
+      jy += 4 * div(days, 1461);
+      days %= 1461;
+      if (days > 365) {
+        jy += div(days - 1, 365);
+        days = (days - 1) % 365;
+      }
+      let jm = days < 186 ? 1 + div(days, 31) : 7 + div(days - 186, 30);
+      let jd = 1 + (days < 186 ? days % 31 : (days - 186) % 30);
+      return [jy, jm, jd];
+    }
+
+    function jalaliToGregorian(jy, jm, jd) {
+      let jy2 = jy - 979;
+      let days = 365 * jy2 + div(jy2, 33) * 8 + div((jy2 % 33) + 3, 4) + 78 + jd + (jm < 7 ? (jm - 1) * 31 : (jm - 7) * 30 + 186);
+      let gy = 1600 + 400 * div(days, 146097);
+      days %= 146097;
+      if (days > 36524) {
+        gy += 100 * div(--days, 36524);
+        days %= 36524;
+        if (days >= 365) days++;
+      }
+      gy += 4 * div(days, 1461);
+      days %= 1461;
+      if (days > 365) {
+        gy += div(days - 1, 365);
+        days = (days - 1) % 365;
+      }
+      let gd = days + 1;
+      let sal_a = [0, 31, ((gy % 4 === 0 && gy % 100 !== 0) || (gy % 400 === 0)) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+      let gm = 0;
+      while (gd > sal_a[gm]) {
+        gd -= sal_a[gm];
+        gm++;
+      }
+      return new Date(gy, gm - 1, gd);
+    }
+
+    function pad(n) { return String(n).padStart(2, '0'); }
+    function isoDate(d) { return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; }
+
+    const jalaliMonthNames = [
+      'فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور',
+      'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'
+    ];
+
+    const jalaliWeekDays = [
+      'یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنجشنبه', 'جمعه', 'شنبه'
+    ];
+  
+
+    let currentTaskSlide = 0;
+    let rotationSeconds = 6;
+    let carouselTimer = null;
+    let progressTimer = null;
+    let progressPercent = 0;
+
+    function getPersonName(id) {
+      const person = appData.people.find(p => p.id === id);
+      return person ? person.name : 'عمومی / تیم';
+    }
+
+    function isTaskOverdue(task) {
+      if (task.status === 'done' || task.status === 'cancel') return false;
+      const tDate = new Date(task.dueDate + 'T' + (task.dueTime || '23:59'));
+      return tDate < new Date();
+    }
+
+    function getPriorityBadge(priority) {
+      if (priority === 'high') {
+        return `<span class="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-rose-500/20 text-rose-300 border border-rose-500/30 flex items-center gap-1"><i class="ph-fill ph-fire"></i> اولویت بالا</span>`;
+      }
+      if (priority === 'low') {
+        return `<span class="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-slate-500/20 text-slate-300 border border-slate-500/30 flex items-center gap-1">اولویت کم</span>`;
+      }
+      return `<span class="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-amber-500/20 text-amber-300 border border-amber-500/30 flex items-center gap-1"><i class="ph-bold ph-flag"></i> اولویت متوسط</span>`;
+    }
+
+    function getStatusBadge(task) {
+      if (isTaskOverdue(task)) {
+        return `<span class="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-rose-600/30 text-rose-200 border border-rose-500/50 flex items-center gap-1 animate-pulse"><i class="ph-bold ph-warning"></i> عقب‌افتاده</span>`;
+      }
+      switch(task.status) {
+        case 'doing':
+          return `<span class="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-sky-500/20 text-sky-300 border border-sky-500/30">در دست اقدام</span>`;
+        case 'done':
+          return `<span class="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">تکمیل شده</span>`;
+        default:
+          return `<span class="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-slate-500/20 text-slate-300 border border-slate-500/30">در صف انجام</span>`;
+      }
+    }
+
+    function updateStats() {
+      const tasks = appData.tasks || [];
+      const todayIsoStr = isoDate(new Date());
+
+      const total = tasks.length;
+      const todayCount = tasks.filter(t => t.dueDate === todayIsoStr).length;
+      const doingCount = tasks.filter(t => t.status === 'doing').length;
+      const overdueCount = tasks.filter(isTaskOverdue).length;
+
+      document.getElementById('statTotal').textContent = total;
+      document.getElementById('statToday').textContent = todayCount;
+      document.getElementById('statDoing').textContent = doingCount;
+      document.getElementById('statOverdue').textContent = overdueCount;
+    }
+
+    function getActiveDisplayTasks() {
+      // Clicking a mini-calendar day filters the task carousel to that date.
+      if (miniCalSelectedIso) {
+        return [...(appData.tasks || [])].filter(t => t.dueDate === miniCalSelectedIso && t.status !== 'done' && t.status !== 'cancel');
+      }
+
+      // Only active tasks are shown in the screensaver. Completed/cancelled tasks stay in the main task history.
+      let list = [...(appData.tasks || [])].filter(t => t.status !== 'done' && t.status !== 'cancel');
+      
+      return list.sort((a, b) => {
+        const da = new Date(a.dueDate + 'T' + (a.dueTime || '23:59'));
+        const db = new Date(b.dueDate + 'T' + (b.dueTime || '23:59'));
+        return da - db;
+      });
+    }
+
+    function renderTaskSlide() {
+      const list = getActiveDisplayTasks();
+      const container = document.getElementById('taskCarouselBox');
+      const pageIndicator = document.getElementById('carouselPageIndicator');
+
+      if (!list.length) {
+        container.innerHTML = `
+          <div class="flex flex-col items-center justify-center py-6 text-slate-400">
+            <i class="ph-duotone ph-check-circle text-4xl text-emerald-400 mb-2"></i>
+            <p class="text-sm font-medium">هیچ کار واگذارشده‌ای باقی نمانده است.</p>
+          </div>
+        `;
+        pageIndicator.textContent = '0 / 0';
+        return;
+      }
+
+      if (currentTaskSlide >= list.length) currentTaskSlide = 0;
+      if (currentTaskSlide < 0) currentTaskSlide = list.length - 1;
+
+      const t = list[currentTaskSlide];
+      pageIndicator.textContent = `${currentTaskSlide + 1} / ${list.length}`;
+
+      // Format date to Jalali
+      let jalaliDue = '--';
+      if (t.dueDate) {
+        const g = new Date(t.dueDate + 'T12:00:00');
+        const [jy, jm, jd] = gregorianToJalali(g.getFullYear(), g.getMonth() + 1, g.getDate());
+        jalaliDue = `${jd} ${jalaliMonthNames[jm - 1]} ${jy}`;
+      }
+
+      container.style.opacity = '0';
+      container.style.transform = 'translateY(6px)';
+
+      setTimeout(() => {
+        container.innerHTML = `
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-2.5">
+              <div class="flex items-center gap-2 min-w-0">
+                <button type="button" class="task-check-btn" onclick="completeTask('${t.id}')" title="انجام شد">✓</button>
+                <span class="text-base font-bold text-white tracking-wide truncate">${escapeHtml(t.title)}</span>
+              </div>
+              <div class="flex items-center gap-1.5 flex-shrink-0">
+                ${getPriorityBadge(t.priority)}
+                ${getStatusBadge(t)}
+              </div>
+            </div>
+            
+            <p class="text-xs text-slate-300 line-clamp-2 leading-relaxed mb-4">
+              ${escapeHtml(t.description || 'بدون توضیحات تکمیلی.')}
+            </p>
+          </div>
+
+          <div class="flex items-center justify-between text-xs pt-3 border-t border-white/5 text-slate-400">
+            <div class="flex items-center gap-2">
+              <div class="w-6 h-6 rounded-full bg-gradient-to-tr from-sky-600 to-indigo-600 flex items-center justify-center text-[10px] font-bold text-white shadow">
+                ${getPersonName(t.assignee).charAt(0)}
+              </div>
+              <span class="text-slate-200 font-medium">${escapeHtml(getPersonName(t.assignee))}</span>
+            </div>
+
+            <div class="flex items-center gap-1 font-mono text-slate-300">
+              <i class="ph-bold ph-calendar text-sky-400"></i>
+              <span>${jalaliDue}</span>
+              ${t.dueTime ? `<span class="text-sky-300/80 mr-1.5">${t.dueTime}</span>` : ''}
+            </div>
+          </div>
+        `;
+        container.style.opacity = '1';
+        container.style.transform = 'translateY(0)';
+      }, 150);
+    }
+
+    function startCarousel() {
+      clearInterval(carouselTimer);
+      clearInterval(progressTimer);
+      progressPercent = 0;
+
+      const progressBar = document.getElementById('carouselProgressBar');
+      const stepInterval = 50; // ms
+      const totalSteps = (rotationSeconds * 1000) / stepInterval;
+
+      progressTimer = setInterval(() => {
+        progressPercent += (100 / totalSteps);
+        if (progressBar) {
+          progressBar.style.width = `${Math.min(100, progressPercent)}%`;
+        }
+      }, stepInterval);
+
+      carouselTimer = setInterval(() => {
+        progressPercent = 0;
+        currentTaskSlide++;
+        renderTaskSlide();
+      }, rotationSeconds * 1000);
+    }
+
+    document.getElementById('prevTaskBtn').addEventListener('click', () => {
+      currentTaskSlide--;
+      renderTaskSlide();
+      startCarousel();
+    });
+
+    document.getElementById('nextTaskBtn').addEventListener('click', () => {
+      currentTaskSlide++;
+      renderTaskSlide();
+      startCarousel();
+    });
+
+    function escapeHtml(s) {
+      return String(s ?? '').replace(/[&<>"']/g, m => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+      }[m]));
+    }
+  
+
+    let miniCalYear = 0;
+    let miniCalMonth = 0;
+    let miniCalSelectedIso = null;
+
+    function initMiniCalendar() {
+      const now = new Date();
+      [miniCalYear, miniCalMonth] = gregorianToJalali(now.getFullYear(), now.getMonth() + 1, now.getDate());
+      renderMiniCalendar();
+    }
+
+    function navigateMiniMonth(offset) {
+      miniCalMonth += offset;
+      if (miniCalMonth < 1) {
+        miniCalYear--;
+        miniCalMonth = 12;
+      } else if (miniCalMonth > 12) {
+        miniCalYear++;
+        miniCalMonth = 1;
+      }
+      renderMiniCalendar();
+    }
+
+    function goTodayMiniCal() {
+      const now = new Date();
+      [miniCalYear, miniCalMonth] = gregorianToJalali(now.getFullYear(), now.getMonth() + 1, now.getDate());
+      miniCalSelectedIso = null;
+      currentTaskSlide = 0;
+      renderMiniCalendar();
+      renderTaskSlide();
+      startCarousel();
+    }
+
+    function selectMiniCalendarDay(dayIso) {
+      miniCalSelectedIso = (miniCalSelectedIso === dayIso) ? null : dayIso;
+      currentTaskSlide = 0;
+      renderMiniCalendar();
+      renderTaskSlide();
+      startCarousel();
+    }
+
+    function renderMiniCalendar() {
+      const monthTitle = document.getElementById('miniCalTitle');
+      monthTitle.textContent = `${jalaliMonthNames[miniCalMonth - 1]} ${miniCalYear}`;
+
+      const firstDayG = jalaliToGregorian(miniCalYear, miniCalMonth, 1);
+      // In JS, 0 is Sunday, 6 is Saturday. Jalali week starts on Saturday (0).
+      const startDayIndex = (firstDayG.getDay() + 1) % 7;
+      
+      const totalDays = miniCalMonth <= 6 ? 31 : (miniCalMonth <= 11 ? 30 : ((miniCalYear % 33 === 1 || miniCalYear % 33 === 5 || miniCalYear % 33 === 9 || miniCalYear % 33 === 13 || miniCalYear % 33 === 17 || miniCalYear % 33 === 22 || miniCalYear % 33 === 26 || miniCalYear % 33 === 30) ? 30 : 29));
+
+      const todayG = new Date();
+      const todayIsoStr = isoDate(todayG);
+
+      const grid = document.getElementById('miniCalendarGrid');
+      grid.innerHTML = '';
+
+      // Blank slots before 1st of month
+      for (let i = 0; i < startDayIndex; i++) {
+        const emptyCell = document.createElement('div');
+        emptyCell.className = 'h-7 rounded-lg';
+        grid.appendChild(emptyCell);
+      }
+
+      // Populate actual days
+      for (let day = 1; day <= totalDays; day++) {
+        const currentG = jalaliToGregorian(miniCalYear, miniCalMonth, day);
+        const dayIso = isoDate(currentG);
+
+        const isToday = dayIso === todayIsoStr;
+        const isSelected = dayIso === miniCalSelectedIso;
+        const tasksForThisDay = (appData.tasks || []).filter(t => t.dueDate === dayIso);
+        const hasTasks = tasksForThisDay.length > 0;
+
+        const cell = document.createElement('div');
+        cell.className = `h-7 rounded-lg flex flex-col items-center justify-center font-mono relative transition-all duration-200 cursor-pointer ${
+          isSelected
+            ? 'mini-day-selected font-bold'
+            : (isToday
+              ? 'bg-sky-500 text-white font-bold shadow-lg shadow-sky-500/40 ring-2 ring-sky-300'
+              : 'hover:bg-white/10 text-slate-300')
+        }`;
+
+        cell.innerHTML = `
+          <span>${day}</span>
+          ${hasTasks ? `<span class="w-1.5 h-1.5 rounded-full ${isToday ? 'bg-white' : 'bg-teal-400'} absolute bottom-0.5"></span>` : ''}
+        `;
+
+        if (hasTasks) {
+          cell.title = `${tasksForThisDay.length} کار برای این روز ثبت شده است`;
+        } else {
+          cell.title = 'نمایش کارهای این روز';
+        }
+        cell.addEventListener('click', () => selectMiniCalendarDay(dayIso));
+        grid.appendChild(cell);
+      }
+    }
+  
+
+    const canvas = document.getElementById('particleCanvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    let particleCount = 60;
+    let animationFrameId;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class Particle {
+      constructor() {
+        this.reset();
+      }
+
+      reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.radius = Math.random() * 2 + 0.5;
+        this.vx = (Math.random() - 0.5) * 0.4;
+        this.vy = (Math.random() - 0.5) * 0.4;
+        this.alpha = Math.random() * 0.6 + 0.2;
+        this.color = Math.random() > 0.4 ? '#60cdff' : '#2dd4bf';
+      }
+
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+
+        if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+      }
+
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.globalAlpha = this.alpha;
+        ctx.shadowBlur = 8;
+        ctx.shadowColor = this.color;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+        ctx.globalAlpha = 1;
+      }
+    }
+
+    function initParticles() {
+      particles = [];
+      for (let i = 0; i < particleCount; i++) {
+        particles.push(new Particle());
+      }
+    }
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Connect close particles with subtle cyber lines
+      for (let i = 0; i < particles.length; i++) {
+        particles[i].update();
+        particles[i].draw();
+
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist < 110) {
+            ctx.beginPath();
+            ctx.strokeStyle = '#0078d4';
+            ctx.globalAlpha = (1 - dist / 110) * 0.15;
+            ctx.lineWidth = 0.75;
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+          }
+        }
+      }
+
+      animationFrameId = requestAnimationFrame(animateParticles);
+    }
+
+    initParticles();
+    animateParticles();
+
+    // Subtle Tone.js Ambient Chime
+    let ambientSynth = null;
+    let isAudioPlaying = false;
+    let audioLoop = null;
+
+    const toggleAudioBtn = document.getElementById('toggleAudioBtn');
+    const audioIcon = document.getElementById('audioIcon');
+    const audioLabel = document.getElementById('audioLabel');
+
+    toggleAudioBtn.addEventListener('click', async () => {
+      if (!isAudioPlaying) {
+        try {
+          await Tone.start();
+          if (!ambientSynth) {
+            ambientSynth = new Tone.PolySynth(Tone.Synth, {
+              oscillator: { type: 'sine' },
+              envelope: { attack: 2, decay: 3, sustain: 0.5, release: 4 }
+            }).toDestination();
+            
+            const filter = new Tone.Filter(800, 'lowpass').toDestination();
+            ambientSynth.connect(filter);
+            ambientSynth.volume.value = -24;
+          }
+
+          const notes = ['D3', 'F3', 'A3', 'C4', 'E4'];
+          audioLoop = new Tone.Loop(time => {
+            const randomNote = notes[Math.floor(Math.random() * notes.length)];
+            ambientSynth.triggerAttackRelease(randomNote, '2n', time);
+          }, '4n').start(0);
+
+          Tone.Transport.start();
+          isAudioPlaying = true;
+          audioIcon.className = 'ph-bold ph-speaker-high text-teal-400 text-sm';
+          audioLabel.textContent = 'صدای ملایم (فعال)';
+        } catch (e) {
+          console.log('Audio init prevented:', e);
+        }
+      } else {
+        if (Tone.Transport) Tone.Transport.stop();
+        if (audioLoop) audioLoop.stop();
+        isAudioPlaying = false;
+        audioIcon.className = 'ph-bold ph-speaker-slash text-slate-400 text-sm';
+        audioLabel.textContent = 'صدای ملایم (خاموش)';
+      }
+    });
+  
+
+    const settingsModal = document.getElementById('settingsModal');
+    const toggleSettingsBtn = document.getElementById('toggleSettingsBtn');
+    const closeSettingsBtn = document.getElementById('closeSettingsBtn');
+    const saveSettingsBtn = document.getElementById('saveSettingsBtn');
+
+    toggleSettingsBtn.addEventListener('click', () => {
+      settingsModal.classList.remove('hidden');
+    });
+
+    closeSettingsBtn.addEventListener('click', () => {
+      settingsModal.classList.add('hidden');
+    });
+
+    saveSettingsBtn.addEventListener('click', () => {
+      settingsModal.classList.add('hidden');
+    });
+
+    // Theme Switcher + persistent settings
+    const SS_SETTINGS_KEY = 'team_calendar_screensaver_settings';
+    let ssSettings = {
+      theme: 'winBlue',
+      idleMinutes: 5,
+      rotationSeconds: 6,
+      particleCount: 60
+    };
+
+    try {
+      const saved = JSON.parse(localStorage.getItem(SS_SETTINGS_KEY) || 'null');
+      if (saved && typeof saved === 'object') ssSettings = {...ssSettings, ...saved};
+    } catch (e) {}
+
+    function persistSSSettings() {
+      localStorage.setItem(SS_SETTINGS_KEY, JSON.stringify(ssSettings));
+    }
+
+    function markActiveTheme(theme) {
+      document.querySelectorAll('#themeChoices .theme-choice').forEach(btn => {
+        btn.classList.toggle('theme-active', btn.dataset.theme === theme);
+      });
+    }
+
+    function setAmbientTheme(theme) {
+      if (!theme) theme = ssSettings.theme || 'winBlue';
+      if (!['winBlue','aurora','cyberpunk'].includes(theme)) theme = 'winBlue';
+
+      const orbs = document.getElementById('ambientOrbs');
+      if (theme === 'winBlue') {
+        orbs.innerHTML = `
+          <div class="ambient-glow-1 absolute -top-40 -left-20 w-[550px] h-[550px] bg-sky-600/25 rounded-full filter blur-[120px]"></div>
+          <div class="ambient-glow-2 absolute top-1/2 -right-40 w-[600px] h-[600px] bg-indigo-600/20 rounded-full filter blur-[140px]"></div>
+          <div class="ambient-glow-1 absolute -bottom-32 left-1/3 w-[500px] h-[500px] bg-teal-500/15 rounded-full filter blur-[130px]"></div>`;
+      } else if (theme === 'aurora') {
+        orbs.innerHTML = `
+          <div class="ambient-glow-1 absolute -top-40 -left-20 w-[550px] h-[550px] bg-emerald-600/25 rounded-full filter blur-[120px]"></div>
+          <div class="ambient-glow-2 absolute top-1/2 -right-40 w-[600px] h-[600px] bg-teal-600/25 rounded-full filter blur-[140px]"></div>
+          <div class="ambient-glow-1 absolute -bottom-32 left-1/3 w-[500px] h-[500px] bg-cyan-500/20 rounded-full filter blur-[130px]"></div>`;
+      } else {
+        orbs.innerHTML = `
+          <div class="ambient-glow-1 absolute -top-40 -left-20 w-[550px] h-[550px] bg-purple-600/30 rounded-full filter blur-[120px]"></div>
+          <div class="ambient-glow-2 absolute top-1/2 -right-40 w-[600px] h-[600px] bg-fuchsia-600/25 rounded-full filter blur-[140px]"></div>
+          <div class="ambient-glow-1 absolute -bottom-32 left-1/3 w-[500px] h-[500px] bg-pink-500/20 rounded-full filter blur-[130px]"></div>`;
+      }
+
+      ssSettings.theme = theme;
+      const overlay = document.getElementById('screensaverOverlay');
+      if (overlay) overlay.setAttribute('data-theme', theme);
+      markActiveTheme(theme);
+    }
+
+    // Sliders
+    const rotationRange = document.getElementById('rotationRange');
+    const rotationSpeedVal = document.getElementById('rotationSpeedVal');
+    rotationRange.value = Math.min(15, Math.max(3, Number(ssSettings.rotationSeconds) || 6));
+    rotationSeconds = Number(rotationRange.value);
+    rotationSpeedVal.textContent = `${rotationSeconds} ثانیه`;
+    rotationRange.addEventListener('input', (e) => {
+      rotationSeconds = Number(e.target.value);
+      ssSettings.rotationSeconds = rotationSeconds;
+      rotationSpeedVal.textContent = `${rotationSeconds} ثانیه`;
+      persistSSSettings();
+      if (typeof startCarousel === 'function') startCarousel();
+    });
+
+    const particlesRange = document.getElementById('particlesRange');
+    const particleDensityVal = document.getElementById('particleDensityVal');
+    particlesRange.value = Math.min(120, Math.max(20, Number(ssSettings.particleCount) || 60));
+    particleCount = Number(particlesRange.value);
+    particleDensityVal.textContent = particleCount > 80 ? 'زیاد' : (particleCount < 40 ? 'کم' : 'متوسط');
+    particlesRange.addEventListener('input', (e) => {
+      particleCount = Number(e.target.value);
+      ssSettings.particleCount = particleCount;
+      particleDensityVal.textContent = particleCount > 80 ? 'زیاد' : (particleCount < 40 ? 'کم' : 'متوسط');
+      persistSSSettings();
+      initParticles();
+    });
+
+    const idleRange = document.getElementById('idleRange');
+    const idleTimeoutVal = document.getElementById('idleTimeoutVal');
+    function toFaDigits(value){ return String(value).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]); }
+    function updateIdleLabel(){
+      const mins = Number(idleRange.value) || 5;
+      idleTimeoutVal.textContent = `${toFaDigits(mins)} دقیقه`;
+    }
+    idleRange.value = Math.min(60, Math.max(1, Number(ssSettings.idleMinutes) || 5));
+    updateIdleLabel();
+
+    idleRange.addEventListener('input', (e) => {
+      ssSettings.idleMinutes = Number(e.target.value);
+      updateIdleLabel();
+    });
+
+    // Apply current saved theme immediately and when the settings modal opens.
+    setAmbientTheme(ssSettings.theme);
+
+    toggleSettingsBtn.addEventListener('click', () => {
+      rotationRange.value = Math.min(15, Math.max(3, Number(ssSettings.rotationSeconds) || 6));
+      rotationSeconds = Number(rotationRange.value);
+      rotationSpeedVal.textContent = `${rotationSeconds} ثانیه`;
+      particlesRange.value = Math.min(120, Math.max(20, Number(ssSettings.particleCount) || 60));
+      particleCount = Number(particlesRange.value);
+      particleDensityVal.textContent = particleCount > 80 ? 'زیاد' : (particleCount < 40 ? 'کم' : 'متوسط');
+      idleRange.value = Math.min(60, Math.max(1, Number(ssSettings.idleMinutes) || 5));
+      updateIdleLabel();
+      markActiveTheme(ssSettings.theme);
+      settingsModal.classList.remove('hidden');
+    });
+
+    saveSettingsBtn.addEventListener('click', () => {
+      ssSettings.idleMinutes = Math.min(60, Math.max(1, Number(idleRange.value) || 5));
+      ssSettings.rotationSeconds = Math.min(15, Math.max(3, Number(rotationRange.value) || 6));
+      ssSettings.particleCount = Math.min(120, Math.max(20, Number(particlesRange.value) || 60));
+      persistSSSettings();
+      settingsModal.classList.add('hidden');
+
+      // Apply the newly selected idle timeout without touching ESC behavior.
+      if (typeof scheduleScreensaver === 'function' && !window.ssActive) scheduleScreensaver();
+    });
+
+    // Periodic check for database updates from other tabs
+    window.addEventListener('storage', (e) => {
+      if (e.key === KEY) {
+        loadDatabase();
+        updateStats();
+        renderTaskSlide();
+        renderMiniCalendar();
+      }
+    });
+
+    // Initialize application view
+    window.addEventListener('DOMContentLoaded', () => {
+      updateStats();
+      renderTaskSlide();
+      initMiniCalendar();
+      startCarousel();
+    });
+  
+// ===== Integrated Screensaver Shared Database =====
+const SS_STORAGE_KEY = 'team_calendar_v2';
+let appData = { tasks: [], people: [] };
+function loadDatabase() {
+  try {
+    const raw = localStorage.getItem(SS_STORAGE_KEY);
+    const parsed = raw ? JSON.parse(raw) : {};
+    appData = {
+      tasks: Array.isArray(parsed.tasks) ? parsed.tasks : [],
+      people: Array.isArray(parsed.people) ? parsed.people : []
+    };
+  } catch (e) {
+    console.error('Screensaver database load error:', e);
+    appData = { tasks: [], people: [] };
+  }
+}
+loadDatabase();
+function refreshScreensaverData(data) {
+  if (data && Array.isArray(data.tasks) && Array.isArray(data.people)) {
+    appData = { tasks: data.tasks, people: data.people };
+  } else {
+    loadDatabase();
+  }
+  currentTaskSlide = 0;
+  if (typeof updateStats==='function') updateStats();
+  if (typeof renderTaskSlide==='function') renderTaskSlide();
+  if (typeof renderMiniCalendar==='function') renderMiniCalendar();
+}
+window.addEventListener('team-calendar-updated', (e) => refreshScreensaverData(e.detail));
+window.addEventListener('storage', (e) => {
+  if (e.key === SS_STORAGE_KEY) refreshScreensaverData();
+});
+
+
+// ===== Integrated configurable idle mode =====
+function getScreensaverIdleMs(){
+  const mins = Math.min(60, Math.max(1, Number(ssSettings?.idleMinutes) || 5));
+  return mins * 60 * 1000;
+}
+let ssIdleTimer = null;
+let ssActive = false;
+let ssLastActivity = Date.now();
+const ssOverlay = document.getElementById('screensaverOverlay');
+
+function enterScreensaver(){
+  if(ssActive) return;
+  loadDatabase();
+  ssActive=true;
+  ssLastActivity=Date.now();
+  ssOverlay.classList.add('ss-active');
+  ssOverlay.setAttribute('aria-hidden','false');
+  document.body.classList.add('screensaver-running');
+  if(typeof updateScreensaverClock==='function') updateScreensaverClock();
+
+  // A user gesture (ESC or the fullscreen button) can request real browser fullscreen.
+  // The 5-minute timer still switches to the visual screensaver even when the browser
+  // blocks an automatic fullscreen request.
+  if(document.fullscreenElement===null && document.documentElement.requestFullscreen){
+    document.documentElement.requestFullscreen().catch(()=>{});
+  }
+
+  if(typeof updateStats==='function') updateStats();
+  if(typeof renderTaskSlide==='function') renderTaskSlide();
+  if(typeof initMiniCalendar==='function') initMiniCalendar();
+  if(typeof startCarousel==='function') startCarousel();
+  if(typeof resizeCanvas==='function') resizeCanvas();
+  if(typeof setAmbientTheme==='function') setAmbientTheme(ssSettings.theme);
+}
+function exitScreensaver(){
+  if(!ssActive) return;
+  ssActive=false;
+  ssOverlay.classList.remove('ss-active');
+  ssOverlay.setAttribute('aria-hidden','true');
+  document.body.classList.remove('screensaver-running');
+  if(document.fullscreenElement && document.exitFullscreen){
+    document.exitFullscreen().catch(()=>{});
+  }
+  if(typeof carouselTimer!=='undefined' && carouselTimer) clearInterval(carouselTimer);
+  if(typeof progressTimer!=='undefined' && progressTimer) clearInterval(progressTimer);
+  scheduleScreensaver();
+}
+function registerActivity(){
+  ssLastActivity=Date.now();
+  if(!ssActive) scheduleScreensaver();
+}
+function scheduleScreensaver(){
+  clearTimeout(ssIdleTimer);
+  const idleMs = getScreensaverIdleMs();
+  ssIdleTimer=setTimeout(()=>{
+    if(Date.now()-ssLastActivity>=idleMs) enterScreensaver();
+    else scheduleScreensaver();
+  },idleMs);
+}
+
+// ESC enters from the normal app and exits from the screensaver.
+// While the screensaver is active, mouse movement/clicks do NOT exit it,
+// so its buttons remain usable.
+window.addEventListener('keydown',(e)=>{
+  if(e.key==='Escape'){
+    e.preventDefault();
+    e.stopPropagation();
+    if(ssActive) exitScreensaver();
+    else{
+      clearTimeout(ssIdleTimer);
+      ssLastActivity=Date.now();
+      enterScreensaver();
+    }
+    return;
+  }
+  if(!ssActive) registerActivity();
+},true);
+
+['mousemove','mousedown','mouseup','wheel','touchstart','pointerdown'].forEach(type=>{
+  window.addEventListener(type,()=>{
+    if(!ssActive) registerActivity();
+    // Intentionally ignored while screensaver is active.
+  },{passive:true});
+});
+
+// Explicit fullscreen button for a reliable user-gesture fullscreen request.
+const ssFullscreenBtn=document.getElementById('ssFullscreenBtn');
+if(ssFullscreenBtn){
+  ssFullscreenBtn.addEventListener('click',(e)=>{
+    e.preventDefault();
+    e.stopPropagation();
+    if(document.fullscreenElement){
+      document.exitFullscreen?.().catch(()=>{});
+    }else{
+      document.documentElement.requestFullscreen?.().catch(()=>{});
+    }
+  });
+}
+// Expose screensaver controls globally so the inline buttons can call them reliably.
+// The screensaver logic lives inside an IIFE, so without these exports browser inline
+// onclick handlers cannot see the functions.
+window.setAmbientTheme = setAmbientTheme;
+window.navigateMiniMonth = navigateMiniMonth;
+window.goTodayMiniCal = goTodayMiniCal;
+window.selectMiniCalendarDay = selectMiniCalendarDay;
+
+window.addEventListener('resize', () => { if (ssActive && typeof resizeCanvas === 'function') resizeCanvas(); });
+setInterval(() => {
+  if (ssActive) {
+    loadDatabase();
+    if (typeof updateStats === 'function') updateStats();
+    if (typeof renderTaskSlide === 'function') renderTaskSlide();
+    if (typeof renderMiniCalendar === 'function') renderMiniCalendar();
+  }
+}, 3000);
+scheduleScreensaver();
+
+})();</script></body>
+</html>
